@@ -10,6 +10,12 @@ from .permissions import IsPostAuthor
 from .models import Post, Comment
 from .serializers import UserSerializer, PostSerializer, CommentSerializer
 
+from posts.factories.post_factory import PostFactory
+from posts.singletons.logger_singleton import LoggerSingleton
+
+logger = LoggerSingleton().get_logger()
+
+
 User = get_user_model()
 
 
@@ -39,11 +45,27 @@ class PostListCreate(APIView):
         return Response(serializer.data)
 
     def post(self, request):
+        # validate input using serializer first
         serializer = PostSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(author=request.user)  # ✅ request.user is Django auth user
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if not serializer.is_valid():
+            logger.warning(
+                f"Post validation failed user={request.user.id} errors={serializer.errors}"
+            )
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            post = PostFactory.create_post(
+                author=request.user,
+                content=serializer.validated_data.get("content", "")
+            )
+            logger.info(f"Post created id={post.id} user={request.user.id}")
+
+            return Response(PostSerializer(post).data, status=status.HTTP_201_CREATED)
+
+        except ValueError as e:
+            logger.warning(f"Post creation failed user={request.user.id} error={str(e)}")
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class CommentListCreate(APIView):
