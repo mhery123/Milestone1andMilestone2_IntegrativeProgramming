@@ -8,6 +8,7 @@ from .views import (
     PostCommentCreate,
     PostCommentsList
 )
+from .auth_views import GoogleLogin
 
 
 urlpatterns = [
@@ -18,5 +19,5 @@ urlpatterns = [
     path("posts/<int:pk>/like/", PostLike.as_view(), name="post-like"),
     path("posts/<int:pk>/comment/", PostCommentCreate.as_view(), name="post-comment"),
     path("posts/<int:pk>/comments/", PostCommentsList.as_view(), name="post-comments"),    
-
+    path("auth/google/login/", GoogleLogin.as_view(), name="google-login")
 ]

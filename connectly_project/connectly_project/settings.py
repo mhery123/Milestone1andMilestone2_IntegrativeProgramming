@@ -137,3 +137,4 @@ REST_FRAMEWORK = {
     ),
 }
 
+GOOGLE_OAUTH_CLIENT_ID = "1089707769145-84q4thcfooihaaj91v2pqi9b3nprll81.apps.googleusercontent.com"
