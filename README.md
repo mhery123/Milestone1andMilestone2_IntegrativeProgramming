@@ -1,4 +1,3 @@
-# Connectly API
 
 Connectly API is a Django REST Framework project that includes user authentication, post creation, likes, comments, Google OAuth login, and a news feed with sorting and pagination.
 
@@ -86,4 +85,5 @@ AI Disclosure Statement
 AI tools were used in this project as a learning aid for debugging support, clarifying technical concepts, improving documentation, and planning diagrams. The final implementation, testing, and submission preparation were completed and reviewed by the student.
 
 Author
+
 Mhery Dela Paz
