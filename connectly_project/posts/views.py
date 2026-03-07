@@ -155,3 +155,36 @@ class PostCommentsList(APIView):
         serializer = CommentSerializer(comments, many=True)
 
         return Response(serializer.data)
+    
+class FeedListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        page = request.query_params.get("page", 1)
+        page_size = 5  # number of posts per page
+
+        try:
+            page = int(page)
+            if page < 1:
+                raise ValueError
+        except ValueError:
+            return Response(
+                {"error": "Invalid page number"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # sort posts by newest first
+        posts = Post.objects.all().order_by("-created_at")
+
+        start = (page - 1) * page_size
+        end = start + page_size
+
+        paginated_posts = posts[start:end]
+
+        serializer = PostSerializer(paginated_posts, many=True)
+
+        return Response({
+            "page": page,
+            "page_size": page_size,
+            "results": serializer.data
+        })
