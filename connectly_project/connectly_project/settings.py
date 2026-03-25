@@ -88,5 +88,18 @@ REST_FRAMEWORK = {
  
 GOOGLE_OAUTH_CLIENT_ID = "1089707769145-84q4thcfooihaaj91v2pqi9b3nprll81.apps.googleusercontent.com"
  
-# Custom user model with role support
+# Custom user model
 AUTH_USER_MODEL = "posts.User"
+ 
+# ─────────────────────────────────────────
+# Cache configuration (Django built-in)
+# Uses LocMemCache — stores cache in memory,
+# no extra install needed. Perfect for development.
+# For production, swap BACKEND to Redis or Memcached.
+# ─────────────────────────────────────────
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "connectly-cache",
+    }
+}
